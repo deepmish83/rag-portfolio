@@ -1,0 +1,138 @@
+[
+    {
+        "id":"q01",
+        "question":"what is HK Express?",
+        "type":"single_source",
+        "must_include":["Hong Kong"],
+        "must_cite":["HK Express"]
+    },
+    {
+        "id":"q02",
+        "question":"who owns cathay pacific?",
+        "type":"multi_source",
+        "must_include":["Cathay"],
+        "must_cite":["HK Express"]
+    },
+    {
+    "id": "Q03",
+    "question": "Where is Hong Kong International Airport located?",
+    "type": "single_source",
+    "must_include": ["Hong Kong"],
+    "must_cite": ["Hong_Kong_International_Airport"]
+  },
+  {
+    "id": "Q04",
+    "question": "What is the Airbus A320 family of aircraft?",
+    "type": "single_source",
+    "must_include": ["Airbus"],
+    "must_cite": ["Airbus_A320_family"]
+  },
+  {
+    "id": "Q05",
+    "question": "What is Microsoft 365?",
+    "type": "single_source",
+    "must_include": ["Microsoft"],
+    "must_cite": ["Microsoft_365"]
+  },
+  {
+    "id": "Q06",
+    "question": "What is Microsoft Copilot?",
+    "type": "single_source",
+    "must_include": ["AI"],
+    "must_cite": ["Microsoft_Copilot"]
+  },
+  {
+    "id": "Q07",
+    "question": "What is a large language model?",
+    "type": "single_source",
+    "must_include": ["model"],
+    "must_cite": ["Large_language_model"]
+  },
+  {
+    "id": "Q08",
+    "question": "What is retrieval-augmented generation and why is it useful?",
+    "type": "single_source",
+    "must_include": ["retrieval"],
+    "must_cite": ["Retrieval-augmented_generation"]
+  },
+  {
+    "id": "Q09",
+    "question": "How does a low-cost carrier differ from a full-service airline?",
+    "type": "synthesis",
+    "must_include": ["cost"],
+    "must_cite": ["Low-cost_carrier"]
+  },
+  {
+    "id": "Q10",
+    "question": "Compare HK Express and Cathay Pacific as airlines.",
+    "type": "multi_source",
+    "must_include": ["Cathay"],
+    "must_cite": ["HK_Express", "Cathay_Pacific"]
+  },
+  {
+    "id": "Q11",
+    "question": "How does generative AI work at a high level?",
+    "type": "synthesis",
+    "must_include": ["model"],
+    "must_cite": ["Generative_artificial_intelligence"]
+  },
+  {
+    "id": "Q12",
+    "question": "How might a low-cost carrier like HK Express use generative AI to improve operations?",
+    "type": "cross_domain",
+    "must_include": ["AI"],
+    "must_cite": []
+  },
+  {
+    "id": "Q13",
+    "question": "What is the weather in Tokyo today?",
+    "type": "refusal",
+    "must_refuse": true
+  },
+  {
+    "id": "Q14",
+    "question": "Who is the current CEO of OpenAI?",
+    "type": "refusal",
+    "must_refuse": true
+  },
+  {
+    "id": "Q15",
+    "question": "What is HK Express's stock price right now?",
+    "type": "refusal",
+    "must_refuse": true
+  },
+  {
+    "id": "Q16",
+    "question": "How many people died on the Titanic?",
+    "type": "refusal",
+    "must_refuse": true
+  },
+  {
+    "id": "Q17",
+    "question": "What is HKIA?",
+    "type": "acronym",
+    "must_include": ["Hong Kong"],
+    "must_cite": ["Hong_Kong_International_Airport"]
+  },
+  {
+    "id": "Q18",
+    "question": "Tell me about Cathay.",
+    "type": "paraphrase",
+    "must_include": ["Cathay"],
+    "must_cite": ["Cathay_Pacific"]
+  },
+  {
+    "id": "Q19",
+    "question": "Why is Hong Kong International Airport important to the city's aviation industry?",
+    "type": "synthesis",
+    "must_include": ["Hong Kong"],
+    "must_cite": []
+  },
+  {
+    "id": "Q20",
+    "question": "What aircraft does HK Express fly?",
+    "type": "single_source",
+    "must_include": ["Airbus"],
+    "must_cite": ["HK_Express"]
+  }
+]
