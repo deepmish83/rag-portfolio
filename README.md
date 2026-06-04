@@ -76,6 +76,25 @@ uvicorn api:app --reload --port 8000
 
 # 6. Open http://localhost:8000/docs and try it
 ```
+## Run with Docker
+
+The service is packaged as a self-contained Docker image with the embedding model pre-baked, so first-request latency is normal (no cold-download).
+
+```bash
+# Build
+docker build -t rag-portfolio:latest .
+
+# Run (with .env for keys, host-mounted Chroma store for persistence)
+docker run --rm -p 8000:8000 \
+  --env-file .env \
+  -v "${PWD}/chroma_db:/app/chroma_db" \
+  -v "${PWD}/corpus:/app/corpus" \
+  rag-portfolio:latest
+
+# Open http://localhost:8000/docs
+```
+
+Chroma store and corpus are mounted as volumes so you can swap them without rebuilding the image.
 
 ## Four things I learned building this
 

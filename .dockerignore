@@ -1,0 +1,27 @@
+# Local virtual env
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets - NEVER inside the image
+.env
+
+# Runtime data - mounted as volumes instead
+chroma_db/
+corpus/
+
+# Repo metadata
+.git/
+.gitignore
+README.md
+*.md
+screenshots/
+
+# IDE / OS junk
+.idea/
+.vscode/
+.DS_Store
+*.log
+
+# Eval outputs
+eval_results.json
