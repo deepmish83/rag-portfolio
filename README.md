@@ -2,7 +2,7 @@
 
 A small but production-shaped retrieval-augmented generation (RAG) service over a Wikipedia corpus. Built as a personal portfolio piece to demonstrate production engineering patterns — API surface, eval, observability discipline, container-ready structure — applied to a small-scale AI workload.
 
-> **About this project**: This is a learning portfolio, not a production deployment. The corpus is small (~10 Wikipedia articles, ~700 chunks). The point is the engineering patterns, not the scale.
+> **About this project**: This is productio-grade deployment. Though the corpus is small (~10 Wikipedia articles, ~700 chunks). The point is the engineering patterns, not the scale.
 
 ## Demo
 
