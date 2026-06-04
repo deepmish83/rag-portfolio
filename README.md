@@ -38,18 +38,17 @@ question → embedding → Chroma (HNSW) → top-k chunks → grounded prompt �
 | API | FastAPI with auto-generated OpenAPI docs |
 | Server | Uvicorn |
 
-## Eval results
+## Eval framework
 
-20-question eval set spanning single-source retrieval, multi-source synthesis, refusal tests, and acronym / paraphrase edge cases.
+A 20-question eval set covers four categories: single-source retrieval, multi-source synthesis, refusal tests, and acronym / paraphrase edge cases. Each question is scored against:
+- Required keywords in the answer
+- Required source files in the retrieval
+- Refusal markers for negative tests (must say "I don't have that information" or equivalent)
 
-| Metric | Value |
-|---|---|
-| Pass rate | **REPLACE_WITH_YOUR_NUMBER / 20** |
-| Avg latency | **REPLACE_WITH_YOUR_NUMBER s / question** |
-| Refusal-test correctness | **REPLACE_WITH_YOUR_NUMBER / 4** |
+See [`eval_set.json`](eval_set.json) for the eval definitions and [`eval.py`](eval.py) for the runner.
 
-Full results in [`eval_results.json`](eval_results.json).
-
+**Smoke test (current):** 1 question verified passing end-to-end (`Q05 — What is Microsoft 365?` — 6.0s, correct source retrieved, keyword check passed). The remaining 4 questions in the smoke run errored on free-tier rate limits — see Lessons Learned below. Full 20-question eval is deferred pending paid quota.
+ 
 ## Quick start
 
 ```bash
@@ -78,13 +77,15 @@ uvicorn api:app --reload --port 8000
 # 6. Open http://localhost:8000/docs and try it
 ```
 
-## Three things I learned building this
+## Four things I learned building this
 
 1. **Retrieval matters more than model choice.** Wrong-source retrieval produced wrong answers no matter how good the LLM was. Most production AI work lives in retrieval engineering, not prompt engineering — and my prior 20 years of data-quality and indexing instincts transfer here.
 
 2. **The grounding rule is one line.** Loosening the system prompt from *"answer ONLY from context"* to *"answer the question"* collapses the entire safety property. Prompt files need version control, review, and regression testing like any other code.
 
 3. **Acronyms break pure embedding retrieval.** Asking _"What is HKIA?"_ failed to retrieve the Hong Kong International Airport article because the embedding model never saw that abbreviation. Hybrid retrieval (BM25 + embedding) isn't theoretical — it solves a real failure mode I observed.
+
+4. **Free LLM tiers are a brittle foundation.** Within two days of repeated eval runs I hit (a) daily quota exhaustion on Google AI Studio and (b) shared-pool rate limits on OpenRouter free models. The production lesson: real AI apps need paid quota, explicit model registry, multi-provider fallback chains, and observability on quota itself — not "point at one provider and hope." This isn't theoretical — it materially blocked my own eval run.
 
 ## What's next
 

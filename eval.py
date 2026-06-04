@@ -48,10 +48,18 @@ def evaluate(eval_path=EVAL_FILE, output_path="eval_results.json"):
     results, passed, total_time = [], 0, 0.0
 
     for q_obj in eval_set:
-        qid = q_obj["id"]
+        qid = q_obj["qid"]
         question = q_obj["question"]
-        t0 = time.perf_counter()
-        
+    print(f"[{qid}] ({q_obj.get('type','?'):14}) {question[:60]}")
+
+    # Initialise everything BEFORE try blocks so they always exist
+    answer, sources = "", []
+    elapsed = 0.0
+    ok, status, reasons = False, "ERROR", []
+
+    t0 = time.perf_counter()
+    last_error = None
+    for attempt in range(3):
         try:
             answer, sources = ask_question(question)
             elapsed = time.perf_counter() - t0
@@ -59,28 +67,43 @@ def evaluate(eval_path=EVAL_FILE, output_path="eval_results.json"):
             status = "PASS" if ok else "FAIL"
             if ok:
                 passed += 1
+            break
         except Exception as e:
-            answer, sources, status, reasons = "", [], "ERROR", [str(e)]
+            last_error = e
             elapsed = time.perf_counter() - t0
+            msg = str(e).lower()
+            if "rate" in msg or "quota" in msg or "429" in msg:
+                wait = 30 * (attempt + 1)
+                print(f"        Rate limited — retrying in {wait}s...")
+                time.sleep(wait)
+            else:
+                # non-rate-limit error, don't retry
+                break
+    
+        # all retries exhausted
+        reasons = [f"rate-limited after 3 attempts: {last_error}"]
 
-        
-        total_time += elapsed
-        marker = "+" if ok else "-"
-        print(f"        {marker} {status}  ({elapsed:.1f}s)")
-        for r in reasons:
-            print(f"          - {r}")
+    if status == "ERROR" and last_error is not None:
+        reasons = reasons or [str(last_error)]
+        answer = f"ERROR: {last_error}"
 
-        results.append({
-            "id": qid,
-            "question": question,
-            "type": q_obj.get("type"),
-            "answer": answer,
-            "sources": sources,
-            "elapsed_s": round(elapsed, 2),
-            "status": status,
-            "reasons": reasons,
-        })
-        print()
+    total_time += elapsed
+    marker = "+" if ok else "-"
+    print(f"        {marker} {status}  ({elapsed:.1f}s)")
+    for r in reasons:
+        print(f"          - {r}")
+
+    results.append({
+        "qid": qid,
+        "question": question,
+        "type": q_obj.get("type"),
+        "answer": answer,
+        "sources": sources,
+        "elapsed_s": round(elapsed, 2),
+        "status": status,
+        "reasons": reasons,
+    })
+    print()
 
     pass_rate = round(passed / len(eval_set) * 100, 1)
     summary = {
@@ -93,7 +116,7 @@ def evaluate(eval_path=EVAL_FILE, output_path="eval_results.json"):
         "results": results,
     }
 
-    with open(out_path, "w", encoding="utf-8") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
 
     print(f"{'='*72}")

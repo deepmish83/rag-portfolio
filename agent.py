@@ -2,14 +2,14 @@
 RAG agent: Ask user for a question, retrieve relevant documents from Chroma vector database, and generate an answer using the retrieved documents as context.   
 """
 
-import os   
+import os
+import time
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 
 
@@ -37,11 +37,21 @@ db = Chroma(
 retriever = db.as_retriever(search_kwargs={"k": TOP_K})
 
 #3 LLM
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+import os
+from langchain_openai import ChatOpenAI
+
+# OpenRouter — gives access to many models through one API
+llm = ChatOpenAI(
+    model="deepseek/deepseek-chat-v3-0324",
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY"),
     temperature=0.2,
-    max_output_tokens=1024,
-    api_key=os.getenv("GOOGLE_API_KEY")
+    default_headers={
+        "HTTP-Referer": "https://github.com/deepmish83/rag-portfolio",
+        "X-Title": "RAG Portfolio",
+    },
 )
 
 #4 Prompt template
@@ -70,8 +80,17 @@ def ask_question(question):
 
     #2 Generate answer
     prompt = prompt_template.invoke({"context": context, "question": question})
-    answer = llm.invoke(prompt).content.strip()
-    return answer, sources
+    for attempt in range(3):
+        try:
+            answer = llm.invoke(prompt).content.strip()
+            return answer, sources
+        except Exception as e:
+            if "429" in str(e) and attempt < 2:
+                wait = 30 * (attempt + 1)
+                print(f"Rate limited — retrying in {wait}s...")
+                time.sleep(wait)
+            else:
+                raise
 
 if __name__ == "__main__":
     print("Welcome to the RAG Agent! Ask a question about the Wikipedia articles.")
