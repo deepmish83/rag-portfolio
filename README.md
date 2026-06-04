@@ -109,14 +109,12 @@ Chroma store and corpus are mounted as volumes so you can swap them without rebu
 ## What's next
 
 - [ ] Hybrid retrieval (BM25 + embedding) with reranking
-- [ ] LangSmith observability instead of stdout
-- [ ] Dockerise + run as a container
 - [ ] LLM-as-judge eval instead of keyword checks
 - [ ] Larger corpus (1,000+ documents)
 
 ## About me
 
-Senior Solution Architect, ~20 years across enterprise .NET / Azure / workflow automation, 10 of those in Hong Kong. Currently moving into AI and automation delivery. This repo is one piece of an active portfolio.
+AI and Automation Specialist, 20+ years across enterprise workflow automation/rpa/cloud integration, 10 of those in Hong Kong. This repo is one piece of an active portfolio.
 
 Reach me on [LinkedIn](https://www.linkedin.com/in/deepak-mishra-career) — happy to discuss.
 
