@@ -4,14 +4,6 @@ A small but production-shaped retrieval-augmented generation (RAG) service over 
 
 > **About this project**: This is productio-grade deployment. Though the corpus is small (~10 Wikipedia articles, ~700 chunks). The point is the engineering patterns, not the scale.
 
-## Demo
-
-![Swagger UI](screenshots/01_swagger_overview.png)
-_FastAPI Swagger UI — try POST /ask with any natural-language question._
-
-![Cross-domain answer](screenshots/03_cross_domain_synthesis.png)
-_Cross-domain synthesis: retrieves from aviation and AI articles, grounds the answer in both._
-
 ## What it does
 
 You ask a natural-language question. The agent:
