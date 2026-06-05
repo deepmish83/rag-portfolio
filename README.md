@@ -2,15 +2,7 @@
 
 A small but production-shaped retrieval-augmented generation (RAG) service over a Wikipedia corpus. Built as a personal portfolio piece to demonstrate production engineering patterns — API surface, eval, observability discipline, container-ready structure — applied to a small-scale AI workload.
 
-> **About this project**: This is a learning portfolio, not a production deployment. The corpus is small (~10 Wikipedia articles, ~700 chunks). The point is the engineering patterns, not the scale.
-
-## Demo
-
-![Swagger UI](screenshots/01_swagger_overview.png)
-_FastAPI Swagger UI — try POST /ask with any natural-language question._
-
-![Cross-domain answer](screenshots/03_cross_domain_synthesis.png)
-_Cross-domain synthesis: retrieves from aviation and AI articles, grounds the answer in both._
+> **About this project**: This is productio-grade deployment. Though the corpus is small (~10 Wikipedia articles, ~700 chunks). The point is the engineering patterns, not the scale.
 
 ## What it does
 
@@ -124,12 +116,14 @@ docker run --rm -p 8000:8000 \
 4. **Free LLM tiers are a brittle foundation.** Within two days of repeated eval runs I hit (a) daily quota exhaustion on Google AI Studio and (b) shared-pool rate limits on OpenRouter free models. The production lesson: real AI apps need paid quota, explicit model registry, multi-provider fallback chains, and observability on quota itself — not "point at one provider and hope." This isn't theoretical — it materially blocked my own eval run.
 
 ## What's next
+
+- [ ] Hybrid retrieval (BM25 + embedding) with reranking
 - [ ] LLM-as-judge eval instead of keyword checks
 - [ ] Larger corpus (1,000+ documents)
 
 ## About me
 
-Senior Solution Architect, ~20 years across enterprise .NET / Azure / workflow automation, 10 of those in Hong Kong. Currently moving into AI and automation delivery. This repo is one piece of an active portfolio.
+AI and Automation Specialist, 20+ years across enterprise workflow automation/rpa/cloud integration, 10 of those in Hong Kong. This repo is one piece of an active portfolio.
 
 Reach me on [LinkedIn](https://www.linkedin.com/in/deepak-mishra-career) — happy to discuss.
 
