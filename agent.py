@@ -34,7 +34,38 @@ db = Chroma(
     embedding_function=embeddings
 )
 
-retriever = db.as_retriever(search_kwargs={"k": TOP_K})
+#Hybrid retrieval with BM25 and vector search
+from pathlib import Path
+from langchain_community.document_loaders import TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.retrievers import BM25Retriever
+from langchain_classic.retrievers import EnsembleRetriever
+
+# Load documents for BM25
+documents = []
+for file in Path("corpus").glob("*.txt"):
+    loader = TextLoader(str(file), encoding="utf-8")
+    docs = loader.load()
+    documents.extend(docs)
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=600, 
+    chunk_overlap=80,
+    separators=["\n\n", "\n", " ", ""])
+
+chunks = text_splitter.split_documents(documents)
+
+bm25_retriever = BM25Retriever.from_documents(chunks)
+bm25_retriever.k = TOP_K
+
+#Combinre BM25 and vector retrievers
+retriever = EnsembleRetriever(
+    retrievers=[
+        bm25_retriever,
+        db.as_retriever(search_kwargs={"k": TOP_K})
+    ],
+    weights=[0.4, 0.6]
+)
 
 #3 LLM
 from langchain_google_genai import ChatGoogleGenerativeAI

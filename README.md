@@ -45,7 +45,27 @@ A 20-question eval set covers four categories: single-source retrieval, multi-so
 - Required source files in the retrieval
 - Refusal markers for negative tests (must say "I don't have that information" or equivalent)
 
+## Update — Hybrid retrieval shipped 
+
+The first build used pure embedding retrieval. Within a day of testing I hit the acronym failure mode described in lesson #3: queries like *"What is HKIA?"* did not retrieve the Hong Kong International Airport article, because the embedding model never saw that abbreviation.
+
+**Fix shipped:** added `rank_bm25` and combined a BM25 keyword retriever with the existing embedding retriever via LangChain's `EnsembleRetriever` (Reciprocal Rank Fusion, weighted 40% keyword / 60% embedding).
+
+```python
+ensemble = EnsembleRetriever(
+    retrievers=[bm25_retriever, embedding_retriever],
+    weights=[0.4, 0.6],
+)
+```
+
+**Result, verified manually through the API:**
+- *"What is HKIA?"* → now correctly resolves to Hong Kong International Airport
+- *"What is HK Express?"* → still works, no regression
+- Full eval re-run deferred pending paid LLM quota (same constraint that blocked the original full eval )
+
 See [`eval_set.json`](eval_set.json) for the eval definitions and [`eval.py`](eval.py) for the runner.
+
+
 
 **Smoke test (current):** 1 question verified passing end-to-end (`Q05 — What is Microsoft 365?` — 6.0s, correct source retrieved, keyword check passed). The remaining 4 questions in the smoke run errored on free-tier rate limits — see Lessons Learned below. Full 20-question eval is deferred pending paid quota.
  
@@ -78,8 +98,6 @@ uvicorn api:app --reload --port 8000
 ```
 ## Run with Docker
 
-The service is packaged as a self-contained Docker image with the embedding model pre-baked, so first-request latency is normal (no cold-download).
-
 ```bash
 # Build
 docker build -t rag-portfolio:latest .
@@ -94,7 +112,6 @@ docker run --rm -p 8000:8000 \
 # Open http://localhost:8000/docs
 ```
 
-Chroma store and corpus are mounted as volumes so you can swap them without rebuilding the image.
 
 ## Four things I learned building this
 
@@ -107,10 +124,6 @@ Chroma store and corpus are mounted as volumes so you can swap them without rebu
 4. **Free LLM tiers are a brittle foundation.** Within two days of repeated eval runs I hit (a) daily quota exhaustion on Google AI Studio and (b) shared-pool rate limits on OpenRouter free models. The production lesson: real AI apps need paid quota, explicit model registry, multi-provider fallback chains, and observability on quota itself — not "point at one provider and hope." This isn't theoretical — it materially blocked my own eval run.
 
 ## What's next
-
-- [ ] Hybrid retrieval (BM25 + embedding) with reranking
-- [ ] LangSmith observability instead of stdout
-- [ ] Dockerise + run as a container
 - [ ] LLM-as-judge eval instead of keyword checks
 - [ ] Larger corpus (1,000+ documents)
 

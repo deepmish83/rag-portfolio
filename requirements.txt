@@ -11,5 +11,6 @@ uvicorn
 python-dotenv
 pypdf
 tiktoken
+rank_bm25
 
 

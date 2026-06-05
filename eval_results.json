@@ -1,20 +1,21 @@
 {
-  "run_at": "2026-06-04T11:49:38.140259",
+  "run_at": "2026-06-05T10:26:56.205154",
   "total": 5,
   "passed": 1,
   "failed": 4,
   "pass_rate_pct": 20.0,
-  "avg_latency_s": 1.2,
+  "avg_latency_s": 1.42,
   "results": [
     {
       "qid": "Q05",
       "question": "What is Microsoft 365?",
       "type": "single_source",
-      "answer": "Microsoft 365 is a product family of productivity software, collaboration, and cloud-based services owned by Microsoft. It includes online services like Outlook.com, OneDrive, Microsoft Teams, and applications such as Word, Excel, PowerPoint, and Outlook. It also encompasses enterprise products like Exchange Server, SharePoint, and Viva Engage. Originally launched as Office 365, it was rebranded to Microsoft 365 in April 2020 to reflect its broader range of services beyond just Office applications, including cloud-based tools and AI features. Microsoft 365 is available for both consumers and businesses, with enterprise plans combining Windows 10 Enterprise, Office 365, and security services.",
+      "answer": "Microsoft 365 is a product family of productivity software, collaboration, and cloud-based services owned by Microsoft. It includes online services like Outlook.com, OneDrive, Microsoft Teams, and applications such as Word, Excel, PowerPoint, and Outlook. It also encompasses enterprise products like Exchange Server, SharePoint, and Viva Engage. Microsoft 365 was rebranded from Office 365 in April 2020 to reflect its broader range of products and services beyond the core Microsoft Office suite, including cloud-based tools and AI features. It offers subscription plans for both consumers and businesses, combining productivity software with security and device management services.",
       "sources": [
-        "Microsoft_365.txt"
+        "Microsoft_365.txt",
+        "Microsoft_Copilot.txt"
       ],
-      "elapsed_s": 5.98,
+      "elapsed_s": 7.1,
       "status": "PASS",
       "reasons": []
     }
